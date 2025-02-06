@@ -149,7 +149,7 @@ const dropMenu = (optionItems) => {
 /**
  * 將指定的元素隱藏，並插入客製化的 UI。
  * @param {Object} options - 配置選項。
- * @param {string} options.selector - CSS 選擇器，例如 ".customSelect"。
+ * @param {string} options.selector - 可以填入CSS 選擇器，DOM元素，NodeList，Element陣列。
  * @param {Function} options.customUiOptionsFn - 接受一個選擇器找到的元素，返回要傳入customUiFn的參數。預設 (element) => element。
  * @param {Function} options.customUiFn - 自訂的 UI 函式。
  */
@@ -158,8 +158,25 @@ const convertToCustomUI = ({
   customUiOptionsFn = (element) => element,
   customUiFn,
 }) => {
+  let selectorArray = null;
+  if (typeof selector === 'string') {
+    //如果selector是字串代表使用的是選擇器
+    selectorArray = document.querySelectorAll(selector);
+  } else if (selector instanceof Element) {
+    //如果selector是Element代表使用的是單一元素
+    selectorArray = [selector];
+  } else if (selector instanceof NodeList) {
+    //如果selector是NodeList代表使用的是元素陣列
+    selectorArray = Array.from(selector);
+  } else if (Array.isArray(selector)) {
+    //如果selector是陣列代表使用的是元素陣列
+    selectorArray = selector.filter((item) => item instanceof Element);
+  } else if (selector === null) {
+    return;
+  }
+
   // 取得所有符合 selector 的元素
-  document.querySelectorAll(selector).forEach((element) => {
+  selectorArray.forEach((element) => {
     // 如果已有 data-converted 屬性代表已轉換過，則直接跳過避免重複轉換
     if (element.dataset.converted) return; // 避免重複轉換
 
@@ -198,4 +215,13 @@ convertToCustomUI({
     newH1.style.textDecoration = 'underline';
     return newH1;
   },
+});
+
+// 測試：將 label文字為 '使用自訂傳入的select:' 的下面的select元素轉換為自訂的下拉選單
+convertToCustomUI({
+  selector: Array.from(document.querySelectorAll('label')).find(
+    (label) => label.textContent === '使用自訂傳入的select:'
+  ).nextElementSibling,
+  customUiOptionsFn: (element) => Array.from(element.options),
+  customUiFn: dropMenu,
 });
