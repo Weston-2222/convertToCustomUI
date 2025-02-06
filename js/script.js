@@ -53,26 +53,26 @@
  */
 const dropMenu = (optionItems) => {
   // 創建外層容器 dropMenu
-  const dropMenu = document.createElement("div");
-  dropMenu.classList.add("dropMenu");
+  const dropMenu = document.createElement('div');
+  dropMenu.classList.add('dropMenu');
 
   // 創建顯示已選項目的容器 chooses
-  const chooses = document.createElement("div");
-  chooses.classList.add("chooses");
+  const chooses = document.createElement('div');
+  chooses.classList.add('chooses');
 
   // 容納已選項目文字的區塊 chooses-content
-  const choosesContent = document.createElement("div");
-  choosesContent.classList.add("chooses-content");
+  const choosesContent = document.createElement('div');
+  choosesContent.classList.add('chooses-content');
 
   // 按鈕：點擊時用來切換選單顯示/隱藏
-  const button = document.createElement("button");
-  button.textContent = "選擇"; // 按鈕文字
-  button.type = "button"; // 防止在表單內被當成 submit
-  button.classList.add("toggle-button");
+  const button = document.createElement('button');
+  button.textContent = '選擇'; // 按鈕文字
+  button.type = 'button'; // 防止在表單內被當成 submit
+  button.classList.add('toggle-button');
 
   // 容納所有選項 UI 的區塊 options
-  const options = document.createElement("div");
-  options.classList.add("options", "hidden");
+  const options = document.createElement('div');
+  options.classList.add('options', 'hidden');
 
   // 將子元素組合到結構中
   chooses.appendChild(choosesContent);
@@ -83,14 +83,14 @@ const dropMenu = (optionItems) => {
   // 點擊按鈕時，切換顯示/隱藏選單
   button.onclick = (e) => {
     e.stopPropagation(); // 防止事件冒泡
-    options.classList.toggle("hidden"); // 切換 hidden 樣式
+    options.classList.toggle('hidden'); // 切換 hidden 樣式
   };
 
   // 為原本 select 中的每個 option 建立對應的自訂 UI
   optionItems.forEach((option) => {
     // 建立單個選項在自訂選單中的顯示元素
-    const optionElement = document.createElement("div");
-    optionElement.classList.add("option-item");
+    const optionElement = document.createElement('div');
+    optionElement.classList.add('option-item');
     optionElement.textContent = option.textContent;
 
     // 加到 options 容器中
@@ -110,16 +110,16 @@ const dropMenu = (optionItems) => {
         if (selectedOption) choosesContent.removeChild(selectedOption);
 
         // 移除選取css
-        optionElement.classList.remove("selected-item");
+        optionElement.classList.remove('selected-item');
       } else {
         // 選取該選項
         option.selected = true;
         // 複製元素
         const clonedOption = optionElement.cloneNode(true);
         // 為複製的元素設置一個屬性 用來取消選取
-        clonedOption.setAttribute("data-value", option.value);
+        clonedOption.setAttribute('data-value', option.value);
         // 添加選取css
-        clonedOption.classList.add("selected-item");
+        clonedOption.classList.add('selected-item');
 
         // 確保新添加的 clone 也可以點擊取消
         clonedOption.onclick = () => {
@@ -128,7 +128,7 @@ const dropMenu = (optionItems) => {
           // 取消選取
           option.selected = false;
           // 移除選取css
-          optionElement.classList.remove("selected-item");
+          optionElement.classList.remove('selected-item');
         };
         // 添加到choosesContent
         choosesContent.appendChild(clonedOption);
@@ -137,9 +137,9 @@ const dropMenu = (optionItems) => {
   });
 
   // 點擊任何外部區域時，將選單隱藏
-  document.addEventListener("click", (event) => {
+  document.addEventListener('click', (event) => {
     if (!dropMenu.contains(event.target)) {
-      options.classList.add("hidden");
+      options.classList.add('hidden');
     }
   });
 
@@ -164,16 +164,16 @@ const convertToCustomUI = ({
     if (element.dataset.converted) return; // 避免重複轉換
 
     // 標示該元素已被轉換
-    element.dataset.converted = "true";
+    element.dataset.converted = 'true';
 
     // 取得要傳入customUiFn的參數
     const params = customUiOptionsFn(element);
-    const customUifn = customUiFn(params);
+    const customUi = customUiFn(params);
 
     // 隱藏原本的元素
-    element.style.display = "none";
+    element.style.display = 'none';
     // 將自訂選單插入到 DOM 結構中，放在原本的元素之後
-    element.parentNode.insertBefore(customUifn, element.nextSibling);
+    element.parentNode.insertBefore(customUi, element.nextSibling);
 
     // 由於元素被隱藏，但並未被移除，
     // 因此在表單提交時，原本的元素仍然有效，可將選取的值送出。
@@ -182,20 +182,20 @@ const convertToCustomUI = ({
 
 // 測試：將 .customSelect 的 select 元素轉換為自訂下拉選單
 convertToCustomUI({
-  selector: ".customSelect",
+  selector: '.customSelect',
   customUiOptionsFn: (element) => Array.from(element.options),
   customUiFn: dropMenu,
 });
 
 // 測試：將 .title 的元素轉換為自訂的 h1 元素。
 convertToCustomUI({
-  selector: ".title",
+  selector: '.title',
   customUiFn: (element) => {
-    const newH1 = document.createElement("h1");
+    const newH1 = document.createElement('h1');
     newH1.textContent = element.textContent;
-    newH1.style.fontStyle = "italic";
-    newH1.style.fontWeight = "bold";
-    newH1.style.textDecoration = "underline";
+    newH1.style.fontStyle = 'italic';
+    newH1.style.fontWeight = 'bold';
+    newH1.style.textDecoration = 'underline';
     return newH1;
   },
 });
