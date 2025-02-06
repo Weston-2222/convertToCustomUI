@@ -1,0 +1,74 @@
+.dropMenu {
+  position: relative;
+  display: inline-block;
+  width: 200px;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  user-select: none;
+}
+
+.chooses {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  border-radius: 4px 4px 0 0;
+}
+
+.chooses-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  flex-grow: 1;
+}
+
+.selected-item {
+  background-color: #007bff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+
+.toggle-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-size: 14px;
+  color: #007bff;
+  transition: color 0.3s;
+}
+
+.options {
+  position: absolute;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+.option-item {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+
