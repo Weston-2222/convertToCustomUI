@@ -111,19 +111,23 @@ const convertToCustomUI = ({
   customUiFn,
 }) => {
   let selectorArray = null;
+
+  // 檢查 selector 的類型並轉換成陣列
   if (typeof selector === 'string') {
-    //如果selector是字串代表使用的是選擇器
+    // 如果selector是字串代表使用的是選擇器
     selectorArray = document.querySelectorAll(selector);
-  } else if (selector instanceof Element) {
-    //如果selector是Element代表使用的是單一元素
-    selectorArray = [selector];
-  } else if (selector instanceof NodeList) {
-    //如果selector是NodeList代表使用的是元素陣列
-    selectorArray = Array.from(selector);
-  } else if (Array.isArray(selector)) {
-    //如果selector是陣列代表使用的是元素陣列
-    selectorArray = selector.filter((item) => item instanceof Element);
-  } else if (selector === null) {
+  } else if (selector instanceof Element || selector === null) {
+    // 如果是null或Element，則將selector轉換成陣列
+    selectorArray = selector ? [selector] : [];
+  } else if (selector instanceof NodeList || Array.isArray(selector)) {
+    // 如果是NodeList或陣列，則將其轉換成陣列
+    selectorArray = Array.from(selector).filter(
+      (item) => item instanceof Element
+    );
+  }
+
+  // 如果 selectorArray 為空或者不存在，直接返回
+  if (!selectorArray || selectorArray.length === 0) {
     return;
   }
 
