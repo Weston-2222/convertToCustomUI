@@ -1,49 +1,47 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Javascript 程式題目 回覆</title>
-    <link type="text/css" rel="stylesheet" href="css/style.css"/>
-</head>
-    <body>
-        <div class='title'>
-            測試
-        </div>
-        <form class="selectForm">
+  <head>
+    <title>Javascript 程式題目 回覆</title>
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="title">測試</div>
 
-            <label>指定select:</label>
-            <select class='customSelect' multiple>
-                <option value="option1">選項 1</option>
-                <option value="option2">選項 2</option>
-                <option value="option3">選項 3</option>
-                <option value="option4">選項 4</option>
-            </select>
+    <form class="selectForm">
+      <label>使用選擇器的select:</label>
+      <select class="customSelect" multiple>
+        <option value="option1">選項 1</option>
+        <option value="option2">選項 2</option>
+        <option value="option3">選項 3</option>
+        <option value="option4">選項 4</option>
+      </select>
 
-            <br/>
-            <label>一般的select</label>
-            <select multiple>
-                <option value="option1">選項 1</option>
-                <option value="option2">選項 2</option>
-                <option value="option3">選項 3</option>
-                <option value="option4">選項 4</option>
-            </select>
+      <br />
 
-            <button type="submit">提交</button>
-        </form>
+      <label>一般的select</label>
+      <select multiple>
+        <option value="option1">選項 1</option>
+        <option value="option2">選項 2</option>
+        <option value="option3">選項 3</option>
+        <option value="option4">選項 4</option>
+      </select>
 
     <script>
-        const handleFormSubmit = (event) => {
-            event.preventDefault();
-            let form = event.target;
-            let selectedOptions = Array.from(form.querySelectorAll("select"))
-                .map(select => Array.from(select.selectedOptions).map(option => option.value))
-            console.log(selectedOptions);
-        }
+      const handleFormSubmit = (event) => {
+        event.preventDefault();
+        let form = event.target;
+        let selectedOptions = Array.from(form.querySelectorAll('select')).map(
+          (select) =>
+            Array.from(select.selectedOptions).map((option) => option.value)
+        );
+        console.log(selectedOptions);
+      };
 
-        document.querySelectorAll(".selectForm").forEach(form => {
-            form.addEventListener("submit", handleFormSubmit);
-        });
+      document.querySelectorAll('.selectForm').forEach((form) => {
+        form.addEventListener('submit', handleFormSubmit);
+      });
     </script>
-   
-<script type="text/javascript" src="js/script.js"></script>
-</body>
+
+    <script type="text/javascript" src="js/script.js"></script>
+  </body>
 </html>
