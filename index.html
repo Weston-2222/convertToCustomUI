@@ -42,12 +42,8 @@
     <script>
       const handleFormSubmit = (event) => {
         event.preventDefault();
-        let form = event.target;
-        let selectedOptions = Array.from(form.querySelectorAll('select')).map(
-          (select) =>
-            Array.from(select.selectedOptions).map((option) => option.value)
-        );
-        console.log(selectedOptions);
+        const formData = new FormData(event.target);
+        console.log(Array.from(formData.entries()));
       };
 
       document.querySelectorAll('.selectForm').forEach((form) => {
