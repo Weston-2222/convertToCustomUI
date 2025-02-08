@@ -39,6 +39,14 @@
       <button type="submit">提交</button>
     </form>
 
+    <div class="grid-container" id="table">
+      <script>
+        for (let i = 1; i <= 50; i++) {
+          document.write(`<div class="grid-item"></div>`);
+        }
+      </script>
+    </div>
+
     <script>
       const handleFormSubmit = (event) => {
         event.preventDefault();

@@ -98,12 +98,24 @@ const dropMenu = (optionItems) => {
   return dropMenu;
 };
 
+// 清理管理器
+const getCleanupManager = () => ({
+  //清理函式數組
+  fns: [],
+  //將fns裡的函式執行並清空數組
+  runCleanup() {
+    this.fns.forEach((fn) => fn());
+    this.fns.length = 0;
+  },
+});
+
 /**
  * 將指定的元素隱藏，並插入客製化的 UI。
  * @param {Object} options - 配置選項。
  * @param {string} options.selector - 可以填入CSS 選擇器，DOM元素，NodeList，Element陣列。
  * @param {Function} options.customUiOptionsFn - 接受一個選擇器找到的元素，返回要傳入customUiFn的參數。預設 (element) => element。
  * @param {Function} options.customUiFn - 自訂的 UI 函式。
+ * @return {Function} - 返回一個清理函數，可以清理自訂UI。
  */
 const convertToCustomUI = ({
   selector,
@@ -130,14 +142,12 @@ const convertToCustomUI = ({
   if (!selectorArray || selectorArray.length === 0) {
     return;
   }
+  const cleanupManager = getCleanupManager();
 
   // 取得所有符合 selector 的元素
   selectorArray.forEach((element) => {
     // 如果已有 data-converted 屬性代表已轉換過，則直接跳過避免重複轉換
-    if (element.dataset.converted) return; // 避免重複轉換
-
-    // 標示該元素已被轉換
-    element.dataset.converted = 'true';
+    if (element.dataset.originalElement) return; // 避免重複轉換
 
     // 取得要傳入customUiFn的參數
     const params = customUiOptionsFn(element);
@@ -147,10 +157,18 @@ const convertToCustomUI = ({
     element.style.display = 'none';
     // 將自訂選單插入到 DOM 結構中，放在原本的元素之後
     element.parentNode.insertBefore(customUi, element.nextSibling);
+    // 將原本的元素引用給 customUi
+    customUi.dataset.originalElement = element;
 
-    // 由於元素被隱藏，但並未被移除，
-    // 因此在表單提交時，原本的元素仍然有效，可將選取的值送出。
+    // 將原本的UI顯示出來 並將customUi刪除
+    cleanupManager.fns.push(() => {
+      element.style.display = '';
+      element.parentNode.removeChild(customUi);
+    });
   });
+  return () => {
+    cleanupManager.runCleanup();
+  };
 };
 
 // 測試：將 .customSelect 的 select 元素轉換為自訂下拉選單
@@ -180,4 +198,41 @@ convertToCustomUI({
   ).nextElementSibling,
   customUiOptionsFn: (element) => Array.from(element.options),
   customUiFn: dropMenu,
+});
+
+// 建立一個清理工具
+const cleanupManager = getCleanupManager();
+
+// 測試：使用convertToCustomUI函數製作一個表格
+document.addEventListener('click', (event) => {
+  // 有這個屬性代表是被convertToCustomUI替換過的UI
+  // 代表重複點擊同一個元素
+  if (event.target.dataset.originalElement) return;
+
+  // 點擊的不是同一個元素的話就清理自訂UI
+  cleanupManager.runCleanup();
+
+  // 獲取目標表格
+  const gridContainer = document.querySelector('#table');
+  // 如果點擊到表格外面就清理自訂UI並就返回
+  if (!gridContainer.contains(event.target)) return;
+
+  // 執行 convertToCustomUI 把div轉換成input
+  const cleanFn = convertToCustomUI({
+    // 目標是被點擊的元素
+    selector: event.target,
+    customUiFn: (element) => {
+      const input = document.createElement('input');
+      // 將 div 裡的內容給 input
+      input.value = element.textContent;
+      // 當用戶輸入的時候把值給原本的div
+      input.onchange = () => {
+        element.textContent = input.value;
+      };
+      input.classList.add('grid-item');
+      return input;
+    },
+  });
+  // 將清除函數給manager
+  cleanupManager.fns.push(cleanFn);
 });

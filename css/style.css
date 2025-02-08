@@ -1,3 +1,7 @@
+* {
+  padding: 0px;
+  margin: 0px;
+}
 .dropMenu {
   position: relative;
   display: inline-block;
@@ -37,7 +41,6 @@
   transition: background-color 0.3s;
 }
 
-
 .toggle-button {
   background-color: transparent;
   border: none;
@@ -71,4 +74,19 @@
   transition: background-color 0.3s;
 }
 
+.grid-container {
+  display: grid;
+  width: 700px;
+  height: 500px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  border: 2px solid black;
+  gap: 0px;
+}
 
+.grid-item {
+  box-sizing: border-box;
+  border: 1px solid black;
+  height: 100%;
+  width: 100%;
+}
