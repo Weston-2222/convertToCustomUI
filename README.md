@@ -93,7 +93,9 @@ document.addEventListener('click', (event) => {
 ## 2025-02-08 更新第四版
 
 新增了一個返回值，這個返回值可以將自訂 UI 清理並回覆舊的 UI。
+
 新增了一個範例，示範如何使用清理函數。
+
 加入 getCleanupManager 管理清理函數的工具。
 
 ---
