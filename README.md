@@ -22,11 +22,13 @@ convertToCustomUI({
 });
 ```
 
-| 參數                | 預設                   | 說明                                                                     |
-| ------------------- | ---------------------- | ------------------------------------------------------------------------ |
-| `selector`          | 必填                   | 可以填入 `class`、`id`、`tag`、DOM 元素、`NodeList` 或 `Element` 陣列。  |
-| `customUiOptionsFn` | `(element) => element` | 接收 `selector` 找到的元素，返回要傳入 `customUiFn` 的參數。             |
-| `customUiFn`        | 必填                   | 自訂的 UI 函式，接收由 customUiOptionsFn 返回的參數，回傳一個 DOM 元素。 |
+|       參數        |   類型   |        預設值        |                                   說明                                   |
+| :---------------: | :------: | :------------------: | :----------------------------------------------------------------------: |
+|     selector      |  string  |         必填         |      可以填入 class、id、tag、DOM 元素、NodeList 或 Element 陣列。       |
+| customUiOptionsFn | function | (element) => element |         接收 selector 找到的元素，返回要傳入 customUiFn 的參數。         |
+|    customUiFn     | function |         必填         | 自訂的 UI 函式，接收由 customUiOptionsFn 返回的參數，回傳一個 DOM 元素。 |
+|      isNone       | boolean  |         true         |                       可以控制目標元素要不要隱藏。                       |
+|     position      |  string  |       'bottom'       |  可以控制自訂元素要插在目標元素上面還是下面，可以填入'bottom' 和 'up'。  |
 
 convertToCustomUI 執行後會返回一個函數，用於將自訂 UI 刪除並回覆原本的 UI。不用參數沒有返回值。
 
@@ -34,9 +36,65 @@ convertToCustomUI 執行後會返回一個函數，用於將自訂 UI 刪除並�
 
 ---
 
-範例 3：convertToCustomUI 的實際應用場景
+## convertToCustomUI 的實際應用場景
 
-有一個使用 div 組成的表格，使用這個函數可以把用戶點擊的 div 變成 input。
+<details>
+  <summary>tooltip懸浮框</summary>
+
+2025-02-09 更新第五版，新增了 isNone 和 position 參數，可以控制目標元素要不要隱藏，以及可以設定新的元素要插在上面還是下面。
+
+利用這個特性我們可以將 isNone 設為 false 來不隱藏元素，在新的元素上設定 position: absolute; 這樣可以達到一個懸浮框的效果。
+
+```js
+const descriptionCleanupManager = getCleanupManager();
+
+// 測試 使用convertToCustomUI函數
+document.addEventListener(
+  'mouseenter',
+  (event) => {
+    // 先確定這是一個我們要的類型
+    if (event.target.nodeType !== 1) return;
+    // 取得元素裡的 description 屬性
+    const target = event.target.closest('[data-description]');
+    if (!target) return;
+    // 將 isNone 設為 false 不應藏目標元素
+    const cleanupFn = convertToCustomUI({
+      selector: target,
+      customUiFn: (element) => {
+        const newNode = document.createElement('div');
+        newNode.textContent = element.dataset.description;
+        newNode.classList.add('tooltip');
+        return newNode;
+      },
+      isNone: false,
+    });
+    // 將清理函數放入清理工具裡
+    descriptionCleanupManager.fns.push(cleanupFn);
+  },
+  // 使用捕獲
+  true
+);
+document.addEventListener(
+  'mouseleave',
+  (event) => {
+    if (event.target.nodeType !== 1) return;
+    const target = event.target.closest('[data-description]');
+    if (!target) return;
+    // 滑鼠移開時清理元素
+    descriptionCleanupManager.runCleanup();
+  },
+  true
+);
+```
+
+</details>
+
+<details>
+  <summary>一個可以輸入的表格</summary>
+  
+ 2025-02-08 更新第四版，新增了一個返回值可以用來將UI的狀態回覆，利用這個特性我們可以隨時切換UI。
+
+首先有一個使用很多 div 組成的表格，這個時候使用 convertToCustomUI 函數可以在用戶點擊一個框框的時候將 div 改變為一個 input，當用戶輸入完成之後把數值帶回 div 中，實現一個可以輸入的表格。
 
 ```js
 // 清理管理器
@@ -87,6 +145,21 @@ document.addEventListener('click', (event) => {
   cleanupManager.fns.push(cleanFn);
 });
 ```
+
+</details>
+
+---
+
+## 2025-02-09 更新第五版
+
+增加了 isNone 和 position 參數
+
+- isNone 用於控制原本的 UI 要不要隱藏。預設為 true。
+- position 用於設定插入的元素要放上面還是下面可以填 'up' 和 'bottom'。預設為 bottom。
+
+如果想要把元素插在上面的話要把 isNone 設為 false 才有差別。
+
+新增了一個範例 tooltip，將滑鼠放在目標元素上會出現一個懸浮框。
 
 ---
 
