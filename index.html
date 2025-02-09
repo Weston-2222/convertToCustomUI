@@ -5,60 +5,65 @@
     <link type="text/css" rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="title">測試</div>
+    <container>
+      <div class="title">測試</div>
 
-    <form class="selectForm">
-      <label>使用選擇器的select:</label>
-      <select name="selectOne" class="customSelect" multiple>
-        <option value="option1">選項 1</option>
-        <option value="option2">選項 2</option>
-        <option value="option3">選項 3</option>
-        <option value="option4">選項 4</option>
-      </select>
+      <section id="tab-container"></section>
+      <form class="selectForm" id="select">
+        <label data-description="這個是使用.selectForm取得的元素"
+          >使用選擇器的select:</label
+        >
+        <select name="selectOne" class="customSelect" multiple>
+          <option value="option1">選項 1</option>
+          <option value="option2">選項 2</option>
+          <option value="option3">選項 3</option>
+          <option value="option4">選項 4</option>
+        </select>
 
-      <br />
+        <br />
 
-      <label>一般的select</label>
-      <select name="selectTwo" multiple>
-        <option value="option1">選項 1</option>
-        <option value="option2">選項 2</option>
-        <option value="option3">選項 3</option>
-        <option value="option4">選項 4</option>
-      </select>
+        <label data-description="這個是一般的select">一般的select</label>
+        <select name="selectTwo" multiple>
+          <option value="option1">選項 1</option>
+          <option value="option2">選項 2</option>
+          <option value="option3">選項 3</option>
+          <option value="option4">選項 4</option>
+        </select>
 
-      <br />
+        <br />
 
-      <label>使用自訂傳入的select:</label>
-      <select name="selectThree" multiple>
-        <option value="option1">選項 1</option>
-        <option value="option2">選項 2</option>
-        <option value="option3">選項 3</option>
-        <option value="option4">選項 4</option>
-      </select>
+        <label data-description="這個是使用相對位置取得的函數"
+          >使用自訂傳入的select:</label
+        >
+        <select name="selectThree" multiple>
+          <option value="option1">選項 1</option>
+          <option value="option2">選項 2</option>
+          <option value="option3">選項 3</option>
+          <option value="option4">選項 4</option>
+        </select>
+        <button type="submit">提交</button>
+      </form>
 
-      <button type="submit">提交</button>
-    </form>
+      <div class="grid-container" id="table" data-description="這個是一個表格">
+        <script>
+          for (let i = 1; i <= 30; i++) {
+            document.write(`<div class="grid-item"></div>`);
+          }
+        </script>
+      </div>
 
-    <div class="grid-container" id="table">
       <script>
-        for (let i = 1; i <= 50; i++) {
-          document.write(`<div class="grid-item"></div>`);
-        }
+        const handleFormSubmit = (event) => {
+          event.preventDefault();
+          const formData = new FormData(event.target);
+          console.log(Array.from(formData.entries()));
+        };
+
+        document.querySelectorAll('.selectForm').forEach((form) => {
+          form.addEventListener('submit', handleFormSubmit);
+        });
       </script>
-    </div>
-
-    <script>
-      const handleFormSubmit = (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        console.log(Array.from(formData.entries()));
-      };
-
-      document.querySelectorAll('.selectForm').forEach((form) => {
-        form.addEventListener('submit', handleFormSubmit);
-      });
-    </script>
-
+    </container>
     <script type="text/javascript" src="js/script.js"></script>
   </body>
 </html>
