@@ -115,12 +115,16 @@ const getCleanupManager = () => ({
  * @param {string} options.selector - 可以填入CSS 選擇器，DOM元素，NodeList，Element陣列。
  * @param {Function} options.customUiOptionsFn - 接受一個選擇器找到的元素，返回要傳入customUiFn的參數。預設 (element) => element。
  * @param {Function} options.customUiFn - 自訂的 UI 函式。
+ * @param {boolean} options.isNone - 決定要不要隱藏目標元素，預設為true。
+ * @param {string} options.position - 決定元素要插在上面還是下面，可以填入 'bottom' 或 'up'，預設為 'bottom'。
  * @return {Function} - 返回一個清理函數，可以清理自訂UI。
  */
 const convertToCustomUI = ({
   selector,
   customUiOptionsFn = (element) => element,
   customUiFn,
+  isNone = true,
+  position = 'bottom',
 }) => {
   let selectorArray = null;
 
@@ -154,9 +158,14 @@ const convertToCustomUI = ({
     const customUi = customUiFn(params);
 
     // 隱藏原本的元素
-    element.style.display = 'none';
+    element.style.display = isNone ? 'none' : '';
     // 將自訂選單插入到 DOM 結構中，放在原本的元素之後
-    element.parentNode.insertBefore(customUi, element.nextSibling);
+    if (position === 'bottom') {
+      element.parentNode.insertBefore(customUi, element.nextSibling);
+    } else if (position === 'up') {
+      element.parentNode.insertBefore(customUi, element);
+    }
+
     // 將原本的元素引用給 customUi
     customUi.dataset.originalElement = element;
 
