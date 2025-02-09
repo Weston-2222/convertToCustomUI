@@ -1,6 +1,9 @@
-* {
-  padding: 0px;
-  margin: 0px;
+body {
+  display: flex;
+  justify-content: center;
+}
+container {
+  width: 80%;
 }
 .dropMenu {
   position: relative;
@@ -61,7 +64,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   max-height: 200px;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 1;
 }
 
 .hidden {
@@ -77,9 +80,9 @@
 .grid-container {
   display: grid;
   width: 700px;
-  height: 500px;
+  height: 300px;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  grid-template-rows: repeat(6, 1fr);
   border: 2px solid black;
   gap: 0px;
 }
@@ -89,4 +92,17 @@
   border: 1px solid black;
   height: 100%;
   width: 100%;
+}
+
+#text-container {
+  width: 700px;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  font-size: 32px;
+  padding: 10px;
 }
