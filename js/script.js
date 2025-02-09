@@ -236,3 +236,43 @@ document.addEventListener('click', (event) => {
   // 將清除函數給manager
   cleanupManager.fns.push(cleanFn);
 });
+
+const descriptionCleanupManager = getCleanupManager();
+
+// 測試 使用convertToCustomUI函數製作tooltip
+document.addEventListener(
+  'mouseenter',
+  (event) => {
+    // 先確定這是一個我們要的類型
+    if (event.target.nodeType !== 1) return;
+    // 取得元素裡的 description 屬性
+    const target = event.target.closest('[data-description]');
+    if (!target) return;
+    // 將 isNone 設為 false 不應藏目標元素
+    const cleanupFn = convertToCustomUI({
+      selector: target,
+      customUiFn: (element) => {
+        const newNode = document.createElement('div');
+        newNode.textContent = element.dataset.description;
+        newNode.classList.add('tooltip');
+        return newNode;
+      },
+      isNone: false,
+    });
+    // 將清理函數放入清理工具裡
+    descriptionCleanupManager.fns.push(cleanupFn);
+  },
+  // 使用捕獲
+  true
+);
+document.addEventListener(
+  'mouseleave',
+  (event) => {
+    if (event.target.nodeType !== 1) return;
+    const target = event.target.closest('[data-description]');
+    if (!target) return;
+    // 滑鼠移開時清理元素
+    descriptionCleanupManager.runCleanup();
+  },
+  true
+);
